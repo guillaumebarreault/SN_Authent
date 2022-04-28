@@ -15,6 +15,9 @@ use sqlx::{error::DatabaseError, postgres::PgError};
 use tracing::{debug, instrument};
 use validator::Validate;
 
+
+
+
 #[instrument(skip(user, repository, crypto_service))]
 pub async fn create_user(
     user: Json<NewUser>,

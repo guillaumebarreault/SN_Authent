@@ -9,6 +9,9 @@ use user::{create_user, me, update_profile};
 type AppResult<T> = Result<T, AppError>;
 type AppResponse = AppResult<HttpResponse>;
 
+
+
+
 pub fn app_config(config: &mut web::ServiceConfig) {
     let signup = web::resource("/signup").route(web::post().to(create_user));
 

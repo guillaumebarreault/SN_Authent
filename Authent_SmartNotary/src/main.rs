@@ -14,6 +14,9 @@ use color_eyre::Result;
 use handlers::app_config;
 use tracing::{info, instrument};
 
+
+
+
 #[actix_rt::main]
 #[instrument]
 async fn main() -> Result<()> {
@@ -24,17 +27,18 @@ async fn main() -> Result<()> {
     let hashing = config.hashing();
 
     info!("Starting server at http://{}:{}/", config.host, config.port);
-
+    
     HttpServer::new(move || {
+        println!("Server is starting\n");
         App::new()
             .wrap(Logger::default())
             .data(pool.clone())
             .data(hashing.clone())
-            .configure(app_config)
+            .configure(app_config)     
     })
     .bind(format!("{}:{}", config.host, config.port))?
     .run()
     .await?;
 
-    Ok(())
+    Ok(println!("\nServer is down\n"))
 }

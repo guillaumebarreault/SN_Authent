@@ -7,6 +7,9 @@ use serde::{Serialize, Serializer};
 use std::convert::From;
 use tracing::error;
 
+
+
+
 #[derive(Debug, Serialize)]
 pub struct AppError {
     message: String,

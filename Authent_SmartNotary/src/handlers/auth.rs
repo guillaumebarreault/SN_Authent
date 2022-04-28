@@ -10,8 +10,12 @@ use futures::future::{ready, BoxFuture};
 use tracing::{debug, instrument};
 use uuid::Uuid;
 
+
+
+
 #[derive(Debug)]
 pub struct AuthenticatedUser(pub Uuid);
+
 
 impl FromRequest for AuthenticatedUser {
     type Error = AppError;
@@ -54,6 +58,7 @@ impl FromRequest for AuthenticatedUser {
         }
     }
 }
+
 
 #[instrument(skip(basic, repository, hashing))]
 pub async fn auth(

@@ -20,7 +20,7 @@ use std::io::Write;
 use std::path::Path;
 /* Hash */
 use rand::Rng;
-//use argon2::{self, Config, ThreadMode, Variant, Version};
+use argon2::{self, Config, ThreadMode, Variant, Version};
 /* AES */
 use aes_gcm::{Aes256Gcm, Key, Nonce};
 use aes_gcm::aead::{Aead, NewAead};
@@ -68,6 +68,23 @@ impl CryptoService {
         println!("\nrandom_salt = {:?}\n", rnd_salt);
         //return rnd_salt;    // salt: 256-bits
         Ok(rnd_salt)
+    }
+
+    pub fn argon2(hash1: &str, salt: [u8; 32]) -> Result<String> {
+        let config = Config {
+            variant: Variant::Argon2d, 	// Select: Argon2i; Argon2d; Argon2id;
+            version: Version::Version13,
+            mem_cost: 65536,
+            time_cost: 10,  // Iterations
+            lanes: 4,   // Parallelism Factor
+            thread_mode: ThreadMode::Parallel,
+            secret: &[],
+            ad: &[],
+            hash_length: 32, // 256-bits
+        };        
+        let hash2: String = argon2::hash_encoded(hash1.as_bytes(), &salt, &config).unwrap();
+           
+        Ok(hash2)
     }
 
     #[instrument(skip(self, password), err)]
@@ -122,7 +139,6 @@ impl CryptoService {
         .await
         .map_err(|err| eyre!("Verifying jwt token: {}", err))
     }
-
 
 
     pub async fn encodeur_b64(value: String) -> Result<String> {
